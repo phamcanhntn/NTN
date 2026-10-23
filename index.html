@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduMath-Code PRO v1.0 | Thầy Phạm Cảnh</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              900: '#0c4a6e',
+            },
+            tech: {
+              dark: '#0f172a',
+              card: '#1e293b',
+              border: '#334155'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
+            mono: ['"Fira Code"', 'JetBrains Mono', 'Consolas', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6.5 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- KaTeX for crisp Math rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+  <!-- Prism.js for Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    code, pre { font-family: 'Fira Code', monospace; }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 9999px; }
+    .dark ::-webkit-scrollbar-thumb { background: #334155; }
+    ::-webkit-scrollbar-thumb:hover { background: #0284c7; }
+
+    .glass-effect {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 dark:bg-[#0b1120] text-slate-800 dark:text-slate-100 h-full flex flex-col transition-colors duration-200">
+
+  <!-- ==================== TOP BAR ==================== -->
+  <header class="h-16 bg-white dark:bg-[#0f172a] border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-4 sm:px-6 z-30 shrink-0 sticky top-0 shadow-xs">
+    <div class="flex items-center gap-3">
+      <!-- Mobile sidebar toggle -->
+      <button id="toggle-sidebar-btn" class="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" aria-label="Toggle Navigation">
+        <i class="fa-solid fa-bars text-lg"></i>
+      </button>
+
+      <!-- Logo & System Info -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 via-blue-600 to-indigo-600 text-white flex items-center justify-center font-black text-lg shadow-md shadow-blue-500/25">
+          PC
+        </div>
+        <div class="hidden sm:block">
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-base tracking-tight text-slate-900 dark:text-white">EduMath-Code <span class="text-sky-500">PRO</span></span>
+            <span class="px-2 py-0.5 text-[10px] font-bold bg-sky-100 dark:bg-sky-950/80 text-sky-700 dark:text-sky-400 rounded-md border border-sky-300 dark:border-sky-800">v1.0</span>
+          </div>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate max-w-xs sm:max-w-md">Thầy Phạm Cảnh • THCS Nguyễn Thị Minh Khai, Định Quán, Đồng Nai</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Countdown Pill & Header Actions -->
+    <div class="flex items-center gap-2 sm:gap-4">
+      <!-- Countdown Badge -->
+      <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-xs">
+        <i class="fa-solid fa-clock-rotate-left text-sky-500 animate-pulse"></i>
+        <span class="text-slate-500 dark:text-slate-400">Thi vào 10:</span>
+        <span id="top-timer" class="font-mono font-bold text-slate-800 dark:text-sky-300">-- ngày</span>
+      </div>
+
+      <!-- Quick Azota Room Button -->
+      <a href="https://azota.vn/de-thi/2yhdqt" target="_blank" rel="noopener noreferrer" 
+         class="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-500 hover:to-sky-500 shadow-sm shadow-blue-500/25 transition active:scale-95">
+        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        <span class="hidden sm:inline">Phòng Thi Azota (2yhdqt)</span>
+        <span class="sm:hidden">Azota</span>
+      </a>
+
+      <!-- Dark Mode Switcher -->
+      <button id="theme-btn" class="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="Chuyển chế độ sáng/tối">
+        <i class="fa-solid fa-moon text-base dark:hidden"></i>
+        <i class="fa-solid fa-sun text-base hidden dark:inline text-amber-400"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN WRAPPER (SIDEBAR + CONTENT) ==================== -->
+  <div class="flex-1 flex overflow-hidden relative">
+
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="w-64 bg-white dark:bg-[#0f172a] border-r border-slate-200 dark:border-slate-800 flex flex-col shrink-0 z-20 transition-all duration-300 fixed inset-y-16 left-0 md:static">
+      
+      <!-- User mini profile card in sidebar -->
+      <div class="p-4 border-b border-slate-100 dark:border-slate-800/80">
+        <div class="flex items-center gap-3 p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-600 to-emerald-500 text-white flex items-center justify-center font-bold text-sm">
+            <i class="fa-solid fa-chalkboard-user"></i>
+          </div>
+          <div class="min-w-0 flex-1">
+            <h4 class="text-xs font-bold text-slate-900 dark:text-white truncate">Phạm Cảnh</h4>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate">Tổ Toán - Tin học THCS</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Menu -->
+      <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
+        <p class="px-3 pt-2 pb-1 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">Phân Hệ Làm Việc</p>
+        
+        <button onclick="nav('dashboard')" id="nav-dashboard" class="nav-btn active w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition">
+          <i class="fa-solid fa-gauge-high w-4 text-sky-500"></i>
+          <span>Tổng Quan Dashboard</span>
+        </button>
+
+        <button onclick="nav('khbd')" id="nav-khbd" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition">
+          <i class="fa-solid fa-book-bookmark w-4 text-indigo-500"></i>
+          <span>Soạn KHBD AI (CV 5512)</span>
+        </button>
+
+        <button onclick="nav('exam')" id="nav-exam" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition">
+          <i class="fa-solid fa-file-circle-check w-4 text-cyan-500"></i>
+          <span>Tạo Đề & Ma Trận Azota</span>
+        </button>
+
+        <button onclick="nav('python')" id="nav-python" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition">
+          <i class="fa-brands fa-python w-4 text-emerald-500 text-sm"></i>
+          <span>BDHSG Python Studio</span>
+        </button>
+
+        <p class="px-3 pt-4 pb-1 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">Kho Tài Nguyên & Liên Kết</p>
+
+        <button onclick="nav('drive')" id="nav-drive" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition">
+          <i class="fa-brands fa-google-drive w-4 text-amber-500"></i>
+          <span>Kho Học Liệu Google Drive</span>
+        </button>
+
+        <p class="px-3 pt-4 pb-1 text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">Hệ Thống</p>
+
+        <button onclick="nav('settings')" id="nav-settings" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition">
+          <i class="fa-solid fa-sliders w-4 text-purple-500"></i>
+          <span>Cấu Hình Gemini API Key</span>
+        </button>
+      </nav>
+
+      <!-- Sidebar Footer Badge -->
+      <div class="p-3 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-500 dark:text-slate-400 text-center">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 mr-1.5"></span>
+        Sẵn sàng làm việc (Offline & AI)
+      </div>
+    </aside>
+
+    <!-- Overlay on mobile -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/40 backdrop-blur-xs z-10 hidden md:hidden"></div>
+
+    <!-- MAIN CONTENT VIEWPORT -->
+    <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-slate-50 dark:bg-[#0b1120]">
+
+      <!-- ==================== VIEW 1: DASHBOARD ==================== -->
+      <section id="view-dashboard" class="space-y-6">
+        
+        <!-- Welcome Hero Banner -->
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-950 text-white p-6 sm:p-8 shadow-lg border border-slate-800">
+          <div class="relative z-10 max-w-3xl space-y-3">
+            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-sky-300 text-xs font-semibold border border-white/10">
+              <i class="fa-solid fa-sparkles"></i>
+              Nền Tảng Trợ Lý Giáo Viên Toán & Tin Học
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+              Chào mừng Thầy Phạm Cảnh trở lại!
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+              Trợ lý số cá nhân hóa giúp thầy soạn nhanh KHBD chuẩn Công văn 5512, trích xuất ma trận và đề kiểm tra định dạng Azota, đồng thời tổng hợp bộ bài tập thuật toán Python bồi dưỡng học sinh giỏi có sẵn test case.
+            </p>
+            <div class="pt-2 flex flex-wrap gap-3">
+              <button onclick="nav('khbd')" class="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs rounded-xl shadow transition">
+                <i class="fa-solid fa-pen-nib mr-1.5"></i> Soạn KHBD Mới
+              </button>
+              <button onclick="nav('exam')" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-white font-semibold text-xs rounded-xl border border-white/20 transition">
+                <i class="fa-solid fa-file-circle-plus mr-1.5"></i> Tạo Đề Azota
+              </button>
+              <button onclick="nav('python')" class="px-4 py-2 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-semibold text-xs rounded-xl border border-emerald-500/30 transition">
+                <i class="fa-brands fa-python mr-1.5"></i> Ra Đề BDHSG
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Metric Stat Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
+            <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
+              <span class="text-xs font-semibold">Kỳ thi Vào Lớp 10</span>
+              <span class="p-2 rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600"><i class="fa-solid fa-graduation-cap"></i></span>
+            </div>
+            <p class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-mono" id="stat-v10">--</p>
+            <p class="text-[11px] text-slate-400 mt-1">Đếm ngược đến ngày 05/06/2027</p>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
+            <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
+              <span class="text-xs font-semibold">Thi HSG Tin Học</span>
+              <span class="p-2 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600"><i class="fa-solid fa-trophy"></i></span>
+            </div>
+            <p class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-mono" id="stat-hsg">--</p>
+            <p class="text-[11px] text-slate-400 mt-1">Cấp Trường &amp; Huyện Định Quán</p>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
+            <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
+              <span class="text-xs font-semibold">Cổng Đề Azota</span>
+              <span class="p-2 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-600"><i class="fa-solid fa-bolt"></i></span>
+            </div>
+            <p class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-mono">2yhdqt</p>
+            <p class="text-[11px] text-emerald-500 font-semibold mt-1">Phòng đang mở nộp bài</p>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
+            <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
+              <span class="text-xs font-semibold">Trạng Thái AI</span>
+              <span class="p-2 rounded-lg bg-purple-50 dark:bg-purple-950/60 text-purple-600"><i class="fa-solid fa-brain"></i></span>
+            </div>
+            <p class="text-sm font-bold text-slate-900 dark:text-white" id="stat-ai-mode">Smart Mock</p>
+            <p class="text-[11px] text-slate-400 mt-1" id="stat-ai-desc">Có thể cấu hình API key</p>
+          </div>
+        </div>
+
+        <!-- Fast Actions & Shortcuts -->
+        <div class="grid md:grid-cols-3 gap-6">
+          <!-- Card 1: Toan 9 -->
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between">
+            <div>
+              <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 flex items-center justify-center text-lg mb-3">
+                <i class="fa-solid fa-square-root-variable"></i>
+              </div>
+              <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Toán Học 9 (GDPT 2018)</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">Hệ thức Vi-ét, phương trình bậc hai, căn thức và hình học không gian.</p>
+              <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-xs font-mono text-center text-blue-600 dark:text-blue-400 mb-3">
+                $x_{1,2} = \frac{-b \pm \sqrt{\Delta}}{2a}$
+              </div>
+            </div>
+            <a href="https://drive.google.com/drive/folders/1zge0RPf3I_9sPDqwwH-Zh8Qg3eEEYU13?usp=sharing" target="_blank" class="text-xs font-bold text-blue-600 hover:underline flex items-center justify-between">
+              <span>Mở thư mục Drive Toán 9</span>
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+          </div>
+
+          <!-- Card 2: Tin 9 -->
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between">
+            <div>
+              <div class="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-950/50 text-cyan-600 flex items-center justify-center text-lg mb-3">
+                <i class="fa-solid fa-desktop"></i>
+              </div>
+              <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Tin Học 9 (Đã có đề cương)</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">Phần mềm bảng tính nâng cao, bảo mật thông tin và mạng máy tính.</p>
+              <div class="p-2.5 rounded-xl bg-cyan-50/60 dark:bg-cyan-950/40 border border-cyan-200 dark:border-cyan-800 text-[11px] text-cyan-800 dark:text-cyan-300 mb-3">
+                ✓ Thầy đã cập nhật trọn bộ đề cương trên Google Drive.
+              </div>
+            </div>
+            <a href="https://drive.google.com/drive/folders/1apCdvaNyruSCnmNBPYJ9HNVcdiA9sA0r?usp=sharing" target="_blank" class="text-xs font-bold text-cyan-600 hover:underline flex items-center justify-between">
+              <span>Mở thư mục Drive Tin 9</span>
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+          </div>
+
+          <!-- Card 3: BDHSG Python -->
+          <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between">
+            <div>
+              <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 flex items-center justify-center text-lg mb-3">
+                <i class="fa-brands fa-python"></i>
+              </div>
+              <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Đội Tuyển BDHSG Python</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">Chuyên đề thuật toán số học, tối ưu thời gian chạy và chia subtask.</p>
+              <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-xs font-mono text-emerald-600 dark:text-emerald-400 mb-3 text-center">
+                Time Limit: 1.0s • O(sqrt(N))
+              </div>
+            </div>
+            <button onclick="nav('python')" class="text-xs font-bold text-emerald-600 hover:underline flex items-center justify-between">
+              <span>Vào phòng luyện thuật toán</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ==================== VIEW 2: SOẠN KHBD AI (CV 5512) ==================== -->
+      <section id="view-khbd" class="hidden space-y-6">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-xs">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-200 dark:border-slate-800 gap-3">
+            <div>
+              <span class="text-[10px] font-black uppercase tracking-wider text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-2.5 py-1 rounded-md">Bộ công cụ chuyên môn</span>
+              <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1">Soạn Kế Hoạch Bài Dạy AI (Chuẩn CV 5512)</h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Tự động cấu trúc 4 hoạt động dạy học, tích hợp năng lực số và ứng dụng thực tiễn.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="generateKHBD()" id="btn-gen-khbd" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span>Tạo Kế Hoạch Bài Dạy</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Input Parameters Form -->
+          <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-6">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Môn học:</label>
+              <select id="khbd-subject" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="Toán 9">Toán 9 (Hình học &amp; Đại số)</option>
+                <option value="Tin học 9">Tin học 9 (Ứng dụng &amp; Thuật toán)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Bộ sách giáo khoa:</label>
+              <select id="khbd-book" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="Kết nối tri thức">Kết nối tri thức với cuộc sống</option>
+                <option value="Cánh Diều">Cánh Diều</option>
+                <option value="Chân trời sáng tạo">Chân trời sáng tạo</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Thời lượng (Tiết):</label>
+              <select id="khbd-duration" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="1 tiết">1 tiết (45 phút)</option>
+                <option value="2 tiết">2 tiết (90 phút)</option>
+                <option value="3 tiết">3 tiết</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Tên bài học:</label>
+              <input type="text" id="khbd-lesson" value="Định lí Vi-ét và ứng dụng" placeholder="Ví dụ: Định lí Vi-ét..." class="w-full text-xs p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+          </div>
+
+          <!-- Result Display Box -->
+          <div class="mt-6 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden bg-slate-50/50 dark:bg-slate-950/60">
+            <div class="flex items-center justify-between px-4 py-3 bg-slate-100 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800">
+              <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                <i class="fa-solid fa-file-lines text-indigo-500"></i>
+                Bản xem trước KHBD
+              </span>
+              <div class="flex items-center gap-2">
+                <button onclick="copyContent('khbd-output')" class="px-3 py-1 bg-white dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200 text-xs font-medium rounded-lg transition">
+                  <i class="fa-regular fa-copy mr-1"></i> Sao chép
+                </button>
+                <button onclick="exportWord('khbd-output', 'KHBD_ThayPhamCanh.doc')" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg transition shadow-xs">
+                  <i class="fa-solid fa-file-word mr-1"></i> Xuất file Word (.doc)
+                </button>
+              </div>
+            </div>
+            
+            <div id="khbd-output" class="p-6 text-xs sm:text-sm text-slate-800 dark:text-slate-200 space-y-4 max-h-[550px] overflow-y-auto leading-relaxed">
+              <p class="text-slate-400 italic text-center py-10">Bấm nút "Tạo Kế Hoạch Bài Dạy" ở trên để hệ thống tiến hành biên soạn giáo án chuẩn CV 5512...</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ==================== VIEW 3: TRUNG TÂM TẠO ĐỀ & MA TRẬN AZOTA ==================== -->
+      <section id="view-exam" class="hidden space-y-6">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-xs">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-200 dark:border-slate-800 gap-3">
+            <div>
+              <span class="text-[10px] font-black uppercase tracking-wider text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-950/60 px-2.5 py-1 rounded-md">Kiểm tra &amp; Đánh giá</span>
+              <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1">Trung Tâm Tạo Đề &amp; Ma Trận Chuẩn Azota</h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Xuất đề thi chuẩn cú pháp Azota (Câu 1... A. B. C. D. [Đáp án]) có thể tải trực tiếp lên hệ thống.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="generateExam()" id="btn-gen-exam" class="px-4 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fa-solid fa-list-check"></i>
+                <span>Tạo Đề &amp; Ma Trận</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Parameter Configuration -->
+          <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-6">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Môn thi:</label>
+              <select id="exam-subject" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                <option value="Toán 9">Toán 9 (Giữa kỳ / Cuối kỳ)</option>
+                <option value="Tin học 9">Tin học 9 (Lý thuyết &amp; Trắc nghiệm)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Thời gian làm bài:</label>
+              <select id="exam-time" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                <option value="45 phút">45 phút (1 tiết)</option>
+                <option value="60 phút">60 phút</option>
+                <option value="90 phút">90 phút</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Cấu trúc đề:</label>
+              <select id="exam-structure" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                <option value="70% TN - 30% TL">70% Trắc nghiệm + 30% Tự luận</option>
+                <option value="100% Trắc nghiệm">100% Trắc nghiệm 4 lựa chọn</option>
+                <option value="Format Mới 2025">Format mới (Đúng/Sai + Trả lời ngắn)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Phạm vi nội dung:</label>
+              <input type="text" id="exam-topic" value="Ôn tập Giữa học kỳ 1" placeholder="Nhập chuyên đề kiểm tra..." class="w-full text-xs p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500">
+            </div>
+          </div>
+
+          <!-- Preview & Export -->
+          <div class="mt-6 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden bg-slate-50/50 dark:bg-slate-950/60">
+            <div class="flex items-center justify-between px-4 py-3 bg-slate-100 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800">
+              <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                <i class="fa-solid fa-code text-cyan-500"></i>
+                Bản xem trước đề thi chuẩn Azota
+              </span>
+              <div class="flex items-center gap-2">
+                <button onclick="copyContent('exam-output')" class="px-3 py-1 bg-white dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200 text-xs font-medium rounded-lg transition">
+                  <i class="fa-regular fa-copy mr-1"></i> Sao chép
+                </button>
+                <button onclick="exportWord('exam-output', 'DeThi_Azota_ThayPhamCanh.doc')" class="px-3 py-1 bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold rounded-lg transition shadow-xs">
+                  <i class="fa-solid fa-download mr-1"></i> Tải Word chuẩn Azota
+                </button>
+              </div>
+            </div>
+
+            <div id="exam-output" class="p-6 text-xs sm:text-sm text-slate-800 dark:text-slate-200 space-y-4 max-h-[550px] overflow-y-auto leading-relaxed">
+              <p class="text-slate-400 italic text-center py-10">Bấm nút "Tạo Đề &amp; Ma Trận" ở trên để hệ thống khởi tạo ma trận đề và câu hỏi chuẩn format Azota...</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ==================== VIEW 4: BDHSG PYTHON STUDIO ==================== -->
+      <section id="view-python" class="hidden space-y-6">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-xs">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-200 dark:border-slate-800 gap-3">
+            <div>
+              <span class="text-[10px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 rounded-md">Bồi dưỡng mũi nhọn</span>
+              <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1">BDHSG Python Studio</h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Sinh đề bài thuật toán, ràng buộc Subtask, test case mẫu và code mẫu tối ưu thời gian.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="generatePythonProblem()" id="btn-gen-py" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fa-brands fa-python"></i>
+                <span>Tạo Bài Tập Thuật Toán</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Parameter Configuration -->
+          <div class="grid sm:grid-cols-3 gap-4 pt-6">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Chủ đề thuật toán:</label>
+              <select id="py-topic" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <option value="Số học &amp; Ước số">Số học &amp; Phân tích ước nguyên tố</option>
+                <option value="Xử lý Mảng &amp; Hai con trỏ">Mảng, Mảng cộng dồn, Hai con trỏ</option>
+                <option value="Xử lý Xâu ký tự">Xử lý xâu, Palindrome, Tần số</option>
+                <option value="Quy hoạch động cơ bản">Quy hoạch động cơ bản (Knapsack, Dãy con tăng)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Độ khó kỳ thi:</label>
+              <select id="py-difficulty" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <option value="HSG Cấp Trường / Tuyển chọn">HSG Cấp Trường / Khảo sát đầu vào</option>
+                <option value="HSG Cấp Huyện Định Quán">HSG Cấp Huyện Định Quán</option>
+                <option value="HSG Cấp Tỉnh Đồng Nai">HSG Cấp Tỉnh Đồng Nai</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Yêu cầu thời gian:</label>
+              <select id="py-timelimit" class="w-full text-xs p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <option value="1.0s - 256MB">1.0 giây - 256MB</option>
+                <option value="0.5s - 128MB">0.5 giây - 128MB</option>
+                <option value="2.0s - 512MB">2.0 giây - 512MB</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Problem Preview -->
+          <div class="mt-6 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden bg-slate-50/50 dark:bg-slate-950/60">
+            <div class="flex items-center justify-between px-4 py-3 bg-slate-100 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800">
+              <span class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                <i class="fa-solid fa-terminal text-emerald-500"></i>
+                Chi tiết đề bài &amp; Lời giải thuật toán
+              </span>
+              <div class="flex items-center gap-2">
+                <button onclick="copyContent('py-output')" class="px-3 py-1 bg-white dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200 text-xs font-medium rounded-lg transition">
+                  <i class="fa-regular fa-copy mr-1"></i> Sao chép tất cả
+                </button>
+                <button onclick="exportWord('py-output', 'De_BDHSG_Python_ThayPhamCanh.doc')" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg transition shadow-xs">
+                  <i class="fa-solid fa-file-word mr-1"></i> Xuất File Đề (.doc)
+                </button>
+              </div>
+            </div>
+
+            <div id="py-output" class="p-6 text-xs sm:text-sm text-slate-800 dark:text-slate-200 space-y-4 max-h-[550px] overflow-y-auto leading-relaxed">
+              <p class="text-slate-400 italic text-center py-10">Bấm nút "Tạo Bài Tập Thuật Toán" ở trên để hệ thống khởi tạo bài toán kèm test case mẫu và code chuẩn...</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ==================== VIEW 5: KHO HỌC LIỆU DRIVE & NỘP BÀI ==================== -->
+      <section id="view-drive" class="hidden space-y-6">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-xs">
+          
+          <div class="pb-6 border-b border-slate-200 dark:border-slate-800">
+            <span class="text-[10px] font-black uppercase tracking-wider text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 px-2.5 py-1 rounded-md">Lưu trữ đám mây</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1">Kho Học Liệu Google Drive &amp; Cổng Azota</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Các liên kết chính thức dành cho học sinh tải đề cương và nộp bài kiểm tra.</p>
+          </div>
+
+          <div class="grid md:grid-cols-3 gap-6 pt-6">
+            
+            <!-- Folder Tin 9 -->
+            <div class="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
+              <div>
+                <div class="w-12 h-12 rounded-2xl bg-cyan-100 dark:bg-cyan-950/60 text-cyan-600 flex items-center justify-center text-xl mb-4">
+                  <i class="fa-brands fa-google-drive"></i>
+                </div>
+                <div class="flex items-center gap-2 mb-1">
+                  <h3 class="font-bold text-slate-900 dark:text-white text-sm">Thư Mục Tin Học 9</h3>
+                  <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-950 px-2 py-0.5 rounded">Mới</span>
+                </div>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Chứa toàn bộ đề cương ôn tập Tin học 9, phiếu bài tập thực hành và tài liệu hướng dẫn.</p>
+              </div>
+              <a href="https://drive.google.com/drive/folders/1apCdvaNyruSCnmNBPYJ9HNVcdiA9sA0r?usp=sharing" target="_blank" rel="noopener noreferrer" 
+                 class="w-full text-center py-2.5 px-4 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs transition flex items-center justify-center gap-2 shadow-xs">
+                <span>Mở Drive Tin Học 9</span>
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </a>
+            </div>
+
+            <!-- Folder Toan 9 -->
+            <div class="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
+              <div>
+                <div class="w-12 h-12 rounded-2xl bg-indigo-100 dark:bg-indigo-950/60 text-indigo-600 flex items-center justify-center text-xl mb-4">
+                  <i class="fa-brands fa-google-drive"></i>
+                </div>
+                <h3 class="font-bold text-slate-900 dark:text-white text-sm mb-1">Thư Mục Toán Học 9</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Chuyên đề ôn thi vào 10, đề cương đại số, hình học không gian và các dạng bài trọng tâm.</p>
+              </div>
+              <a href="https://drive.google.com/drive/folders/1zge0RPf3I_9sPDqwwH-Zh8Qg3eEEYU13?usp=sharing" target="_blank" rel="noopener noreferrer" 
+                 class="w-full text-center py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition flex items-center justify-center gap-2 shadow-xs">
+                <span>Mở Drive Toán Học 9</span>
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </a>
+            </div>
+
+            <!-- Azota Room -->
+            <div class="bg-slate-50 dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
+              <div>
+                <div class="w-12 h-12 rounded-2xl bg-blue-100 dark:bg-blue-950/60 text-blue-600 flex items-center justify-center text-xl mb-4">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                </div>
+                <div class="flex items-center gap-2 mb-1">
+                  <h3 class="font-bold text-slate-900 dark:text-white text-sm">Phòng Thi Azota</h3>
+                  <span class="text-[10px] font-bold text-blue-600 bg-blue-50 dark:bg-blue-950 px-2 py-0.5 rounded font-mono">2yhdqt</span>
+                </div>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Cổng nộp bài làm trắc nghiệm &amp; chụp ảnh bài làm tự luận của Thầy Phạm Cảnh.</p>
+              </div>
+              <a href="https://azota.vn/de-thi/2yhdqt" target="_blank" rel="noopener noreferrer" 
+                 class="w-full text-center py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition flex items-center justify-center gap-2 shadow-xs">
+                <span>Vào Làm Bài Azota</span>
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ==================== VIEW 6: CÀI ĐẶT & GEMINI API KEY ==================== -->
+      <section id="view-settings" class="hidden space-y-6">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-xs max-w-3xl">
+          
+          <div class="pb-6 border-b border-slate-200 dark:border-slate-800">
+            <span class="text-[10px] font-black uppercase tracking-wider text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/60 px-2.5 py-1 rounded-md">Thiết lập hệ thống</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1">Cấu Hình Trí Tuệ Nhân Tạo (Gemini API)</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Kết nối trực tiếp với Google Gemini để mở khóa khả năng sinh giáo án và đề thi không giới hạn.</p>
+          </div>
+
+          <div class="space-y-4 pt-6">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Google Gemini API Key:</label>
+              <div class="flex gap-2">
+                <input type="password" id="gemini-api-key" placeholder="Dán API Key (AIzaSy...)" class="flex-1 text-xs p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-mono focus:outline-none focus:ring-2 focus:ring-purple-500">
+                <button onclick="toggleKeyVisibility()" class="px-3 py-2 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl text-xs hover:bg-slate-200 transition">
+                  <i class="fa-regular fa-eye" id="eye-icon"></i>
+                </button>
+              </div>
+              <p class="text-[11px] text-slate-500 mt-1.5 leading-relaxed">
+                * Khóa API được lưu cục bộ trên trình duyệt của thầy (localStorage) và không gửi đi bất kỳ đâu ngoại trừ máy chủ Google. 
+                Nếu để trống, ứng dụng sẽ tự động chuyển sang chế độ <strong>Smart Mock Generator</strong> (mô phỏng chuẩn mẫu sư phạm không cần mạng).
+              </p>
+            </div>
+
+            <div class="flex items-center gap-3 pt-2">
+              <button onclick="saveApiKey()" class="px-5 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2">
+                <i class="fa-solid fa-floppy-disk"></i>
+                <span>Lưu Cấu Hình</span>
+              </button>
+              <button onclick="clearApiKey()" class="px-4 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-300 font-semibold text-xs rounded-xl transition">
+                Xóa Key
+              </button>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-purple-50/60 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800/80 text-xs text-purple-900 dark:text-purple-300 space-y-1.5">
+              <p class="font-bold">Cách lấy API Key miễn phí 100% từ Google:</p>
+              <ol class="list-decimal list-inside space-y-1 text-[11px] text-purple-800 dark:text-purple-400">
+                <li>Truy cập <a href="https://aistudio.google.com/app/apikey" target="_blank" class="underline font-bold text-purple-600 dark:text-purple-300">Google AI Studio</a> và đăng nhập Gmail.</li>
+                <li>Bấm nút <strong>Create API Key</strong> (Tạo khóa API).</li>
+                <li>Sao chép mã bắt đầu bằng `AIzaSy...` và dán vào ô trên rồi bấm Lưu.</li>
+              </ol>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ==================== JAVASCRIPT CORE LOGIC ==================== -->
+  <script>
+    // 1. Sidebar Toggle & Responsive Navigation
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggle-sidebar-btn');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    function toggleSidebar() {
+      const isClosed = sidebar.classList.contains('-translate-x-full');
+      if (isClosed) {
+        sidebar.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+      }
+    }
+
+    // Default responsive state
+    if (window.innerWidth < 768) {
+      sidebar.classList.add('-translate-x-full');
+    }
+
+    toggleBtn.addEventListener('click', toggleSidebar);
+    overlay.addEventListener('click', toggleSidebar);
+
+    // 2. View Switching Logic
+    const views = ['dashboard', 'khbd', 'exam', 'python', 'drive', 'settings'];
+    function nav(target) {
+      views.forEach(v => {
+        const sec = document.getElementById(`view-${v}`);
+        const btn = document.getElementById(`nav-${v}`);
+        if (v === target) {
+          sec.classList.remove('hidden');
+          btn.classList.add('bg-slate-100', 'dark:bg-slate-800', 'text-sky-600', 'dark:text-sky-400', 'font-bold');
+        } else {
+          sec.classList.add('hidden');
+          btn.classList.remove('bg-slate-100', 'dark:bg-slate-800', 'text-sky-600', 'dark:text-sky-400', 'font-bold');
+        }
+      });
+
+      if (window.innerWidth < 768) {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+      }
+
+      // Re-trigger KaTeX when switching views
+      renderMath();
+    }
+
+    // 3. Dark Mode Toggle
+    const themeBtn = document.getElementById('theme-btn');
+    themeBtn.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+    });
+
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    }
+
+    // 4. Countdowns (Tuyển sinh 10 & HSG)
+    const TARGET_10 = new Date("2027-06-05T07:30:00").getTime();
+    const TARGET_HSG = new Date("2027-01-15T08:00:00").getTime();
+
+    function updateTimers() {
+      const now = new Date().getTime();
+      const diff10 = TARGET_10 - now;
+      const diffHsg = TARGET_HSG - now;
+
+      if (diff10 > 0) {
+        const d = Math.floor(diff10 / (1000 * 60 * 60 * 24));
+        document.getElementById('top-timer').innerText = `${d} ngày`;
+        document.getElementById('stat-v10').innerText = `${d} ngày`;
+      }
+      if (diffHsg > 0) {
+        const dHsg = Math.floor(diffHsg / (1000 * 60 * 60 * 24));
+        document.getElementById('stat-hsg').innerText = `${dHsg} ngày`;
+      }
+    }
+    setInterval(updateTimers, 1000);
+    updateTimers();
+
+    // 5. API Key Management
+    const API_KEY_STORAGE = "edumath_gemini_key";
+    const apiKeyInput = document.getElementById('gemini-api-key');
+
+    function loadApiKey() {
+      const saved = localStorage.getItem(API_KEY_STORAGE) || "";
+      apiKeyInput.value = saved;
+      updateAiBadge(saved);
+    }
+
+    function saveApiKey() {
+      const key = apiKeyInput.value.trim();
+      localStorage.setItem(API_KEY_STORAGE, key);
+      updateAiBadge(key);
+      alert("Đã lưu API Key thành công! Hệ thống sẵn sàng kết nối Gemini AI.");
+    }
+
+    function clearApiKey() {
+      localStorage.removeItem(API_KEY_STORAGE);
+      apiKeyInput.value = "";
+      updateAiBadge("");
+      alert("Đã xóa API Key. Ứng dụng chuyển sang chế độ Smart Mock Generator.");
+    }
+
+    function toggleKeyVisibility() {
+      const isPass = apiKeyInput.type === 'password';
+      apiKeyInput.type = isPass ? 'text' : 'password';
+      document.getElementById('eye-icon').className = isPass ? "fa-regular fa-eye-slash" : "fa-regular fa-eye";
+    }
+
+    function updateAiBadge(key) {
+      const statMode = document.getElementById('stat-ai-mode');
+      const statDesc = document.getElementById('stat-ai-desc');
+      if (key && key.length > 10) {
+        statMode.innerText = "Gemini Flash AI";
+        statMode.className = "text-sm font-bold text-purple-600 dark:text-purple-400";
+        statDesc.innerText = "Sẵn sàng sinh nội dung trực tuyến";
+      } else {
+        statMode.innerText = "Smart Mock Sư Phạm";
+        statMode.className = "text-sm font-bold text-slate-800 dark:text-slate-200";
+        statDesc.innerText = "Mô phỏng mẫu chuẩn CV 5512";
+      }
+    }
+    loadApiKey();
+
+    // 6. Gemini API Caller with Exponential Backoff
+    async function callGemini(promptText, systemInstruction) {
+      const key = localStorage.getItem(API_KEY_STORAGE) || "";
+      if (!key) return null; // fallback to mock
+
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${key}`;
+      const payload = {
+        contents: [{ parts: [{ text: promptText }] }],
+        systemInstruction: { parts: [{ text: systemInstruction }] }
+      };
+
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (res.ok) {
+            const data = await res.json();
+            return data.candidates?.[0]?.content?.parts?.[0]?.text || null;
+          }
+        } catch (e) {
+          // exponential backoff
+          await new Promise(r => setTimeout(r, Math.pow(2, attempt) * 1000));
+        }
+      }
+      return null;
+    }
+
+    // 7. Math & Code Renderer Helper
+    function renderMath() {
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+          ]
+        });
+      }
+      if (window.Prism) {
+        Prism.highlightAll();
+      }
+    }
+
+    // 8. Module 1: Soạn KHBD
+    async function generateKHBD() {
+      const subject = document.getElementById('khbd-subject').value;
+      const book = document.getElementById('khbd-book').value;
+      const duration = document.getElementById('khbd-duration').value;
+      const lesson = document.getElementById('khbd-lesson').value.trim() || "Bài học trọng tâm";
+      const outBox = document.getElementById('khbd-output');
+      const btn = document.getElementById('btn-gen-khbd');
+
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang biên soạn...</span>`;
+      outBox.innerHTML = `<div class="text-center py-12"><i class="fa-solid fa-circle-notch fa-spin text-3xl text-indigo-500 mb-3"></i><p class="font-bold text-slate-700 dark:text-slate-300">Hệ thống đang cấu trúc Kế hoạch bài dạy chuẩn CV 5512...</p></div>`;
+
+      const prompt = `Soạn Kế hoạch bài dạy chuẩn Công văn 5512 của Bộ GD&ĐT cho môn: ${subject}, Sách: ${book}, Tên bài: "${lesson}", Thời lượng: ${duration}.
+      Yêu cầu đầy đủ:
+      I. MỤC TIÊU (Kiến thức, Năng lực chung, Năng lực đặc thù Toán/Tin, Phẩm chất).
+      II. THIẾT BỊ DẠY HỌC VÀ HỌC LIỆU (Tích hợp máy tính, phần mềm GeoGebra/Python nếu có).
+      III. TIẾN TRÌNH DẠY HỌC (Đủ 4 hoạt động: Hoạt động 1: Mở đầu; Hoạt động 2: Hình thành kiến thức mới; Hoạt động 3: Luyện tập; Hoạt động 4: Vận dụng). Mỗi hoạt động đủ Mục tiêu, Nội dung, Sản phẩm, Tổ chức thực hiện. Trình bày bằng HTML đơn giản hoặc văn bản chuẩn.`;
+
+      const aiResult = await callGemini(prompt, "Bạn là chuyên gia sư phạm THCS chuyên soạn KHBD chuẩn Công văn 5512.");
+
+      let finalHtml = "";
+      if (aiResult) {
+        finalHtml = `<div class="space-y-4 whitespace-pre-wrap font-sans">${aiResult}</div>`;
+      } else {
+        // Smart Sư Phạm Mock
+        finalHtml = `
+          <div class="space-y-4 font-sans">
+            <div class="text-center pb-4 border-b border-slate-200 dark:border-slate-800">
+              <h3 class="text-base font-extrabold uppercase text-indigo-700 dark:text-indigo-400">KẾ HOẠCH BÀI DẠY (CHUẨN CÔNG VĂN 5512)</h3>
+              <p class="font-bold text-sm text-slate-900 dark:text-white">MÔN: ${subject.toUpperCase()} - BỘ SÁCH: ${book.toUpperCase()}</p>
+              <p class="text-xs text-slate-500">TÊN BÀI: <strong>${lesson.toUpperCase()}</strong> (Thời lượng: ${duration})</p>
+              <p class="text-xs text-slate-400 italic">Giáo viên thực hiện: Thầy Phạm Cảnh - THCS Nguyễn Thị Minh Khai</p>
+            </div>
+
+            <div>
+              <h4 class="font-bold text-indigo-600 dark:text-indigo-400 text-sm">I. MỤC TIÊU</h4>
+              <p><strong>1. Kiến thức:</strong> Học sinh nắm vững định nghĩa, bản chất toán học/tin học của bài học <em>${lesson}</em>, vận dụng linh hoạt vào bài tập thực tiễn.</p>
+              <p><strong>2. Năng lực:</strong></p>
+              <ul class="list-disc list-inside pl-2 space-y-1 text-slate-600 dark:text-slate-300">
+                <li><em>Năng lực toán học/tin học:</em> Năng lực tư duy và lập luận logic, mô hình hóa toán học, giải quyết vấn đề với sự trợ giúp của máy tính.</li>
+                <li><em>Năng lực chung:</em> Tự chủ và tự học, giao tiếp và hợp tác nhóm, sáng tạo.</li>
+              </ul>
+              <p><strong>3. Phẩm chất:</strong> Chăm chỉ, trách nhiệm, trung thực và cẩn thận trong tính toán/viết mã nguồn.</p>
+            </div>
+
+            <div>
+              <h4 class="font-bold text-indigo-600 dark:text-indigo-400 text-sm">II. THIẾT BỊ DẠY HỌC VÀ HỌC LIỆU</h4>
+              <p>• <strong>Giáo viên:</strong> Giáo án điện tử, máy chiếu, bảng phụ, phiếu học tập, ứng dụng Azota nộp bài kiểm tra.</p>
+              <p>• <strong>Học sinh:</strong> Sách giáo khoa, vở ghi, đồ dùng học tập, máy tính cá nhân hoặc thiết bị có kết nối mạng.</p>
+            </div>
+
+            <div>
+              <h4 class="font-bold text-indigo-600 dark:text-indigo-400 text-sm">III. TIẾN TRÌNH DẠY HỌC</h4>
+              
+              <div class="space-y-3 mt-2">
+                <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/60">
+                  <p class="font-bold text-slate-900 dark:text-white">1. Hoạt Động 1: Mở Đầu (Xác định vấn đề - 5 phút)</p>
+                  <p>• <strong>Mục tiêu:</strong> Tạo tâm thế hứng thú, kích hoạt kiến thức nền tảng.</p>
+                  <p>• <strong>Nội dung:</strong> Giáo viên đưa ra tình huống thực tế liên quan đến bài <em>${lesson}</em>.</p>
+                  <p>• <strong>Sản phẩm:</strong> Câu trả lời miệng hoặc phiếu khởi động của học sinh.</p>
+                </div>
+
+                <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/60">
+                  <p class="font-bold text-slate-900 dark:text-white">2. Hoạt Động 2: Hình Thành Kiến Thức Mới (20 phút)</p>
+                  <p>• <strong>Mục tiêu:</strong> Học sinh tự khám phá quy tắc, định lí, thuật toán then chốt.</p>
+                  <p>• <strong>Tổ chức thực hiện:</strong> Giáo viên chia lớp thành 4 nhóm, phát phiếu học tập số 1 để tìm hiểu định lý và công thức trọng tâm: $x = \\frac{-b \\pm \\sqrt{\\Delta}}{2a}$.</p>
+                  <p>• <strong>Sản phẩm:</strong> Báo cáo kết quả thảo luận của các nhóm trên bảng phụ.</p>
+                </div>
+
+                <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/60">
+                  <p class="font-bold text-slate-900 dark:text-white">3. Hoạt Động 3: Luyện Tập (15 phút)</p>
+                  <p>• <strong>Mục tiêu:</strong> Rèn luyện kỹ năng giải toán, nhận diện dạng bài và sửa các lỗi sai thường gặp.</p>
+                  <p>• <strong>Sản phẩm:</strong> Bài giải độc lập của học sinh trong vở và trên hệ thống Azota.</p>
+                </div>
+
+                <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/60">
+                  <p class="font-bold text-slate-900 dark:text-white">4. Hoạt Động 4: Vận Dụng &amp; Giao Nhiệm Vụ (5 phút)</p>
+                  <p>• <strong>Mục tiêu:</strong> Ứng dụng kiến thức vào thực tiễn, định hướng học tập ở nhà.</p>
+                  <p>• <strong>Nội dung:</strong> Học sinh truy cập cổng thông tin lớp học, làm bài tập về nhà và nộp qua Azota mã <strong>2yhdqt</strong> trước 21h00 Chủ Nhật.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      outBox.innerHTML = finalHtml;
+      btn.disabled = false;
+      btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Tạo Kế Hoạch Bài Dạy</span>`;
+      renderMath();
+    }
+
+    // 9. Module 2: Tạo Đề Azota
+    async function generateExam() {
+      const subject = document.getElementById('exam-subject').value;
+      const time = document.getElementById('exam-time').value;
+      const structure = document.getElementById('exam-structure').value;
+      const topic = document.getElementById('exam-topic').value.trim() || "Kiểm tra định kỳ";
+      const outBox = document.getElementById('exam-output');
+      const btn = document.getElementById('btn-gen-exam');
+
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang khởi tạo đề...</span>`;
+      outBox.innerHTML = `<div class="text-center py-12"><i class="fa-solid fa-circle-notch fa-spin text-3xl text-cyan-500 mb-3"></i><p class="font-bold text-slate-700 dark:text-slate-300">Đang sinh ma trận đặc tả và bộ câu hỏi chuẩn Azota...</p></div>`;
+
+      const prompt = `Soạn đề kiểm tra môn ${subject}, thời gian ${time}, cấu trúc ${structure}, chủ đề "${topic}".
+      Quy chuẩn bắt buộc: Xuất theo định dạng chuẩn Azota để giáo viên có thể copy đưa thẳng lên azota.vn:
+      - Ma trận đề kiểm tra ngắn gọn.
+      - Phần trắc nghiệm:
+      Câu 1: [Nội dung câu hỏi]
+      A. [Lựa chọn A]
+      B. [Lựa chọn B]
+      C. [Lựa chọn C]
+      D. [Lựa chọn D]
+      - Phần đáp án cuối đề:
+      BẢNG ĐÁP ÁN:
+      1. A  2. B  3. C  4. D...`;
+
+      const aiResult = await callGemini(prompt, "Bạn là chuyên gia khảo thí THCS chuyên ra đề trắc nghiệm chuẩn Azota.");
+
+      let finalHtml = "";
+      if (aiResult) {
+        finalHtml = `<pre class="font-mono text-xs whitespace-pre-wrap bg-slate-900 text-slate-100 p-4 rounded-xl">${aiResult}</pre>`;
+      } else {
+        // Smart Azota Format Mock
+        finalHtml = `
+          <div class="space-y-4 font-mono text-xs sm:text-sm">
+            <div class="p-3 rounded-xl bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-200 dark:border-cyan-800 font-sans text-xs">
+              <p class="font-bold text-cyan-800 dark:text-cyan-300">MA TRẬN ĐẶC TẢ ĐỀ KIỂM TRA: ${subject.toUpperCase()} - ${time}</p>
+              <p>Chủ đề: ${topic} • Hình thức: ${structure}</p>
+              <p>• Nhận biết: 40% (4 câu) • Thông hiểu: 30% (3 câu) • Vận dụng: 20% (2 câu) • Vận dụng cao: 10% (1 câu)</p>
+            </div>
+
+            <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-4">
+              <p class="font-bold text-center text-sm font-sans">ĐỀ KIỂM TRA ĐỊNH KỲ - NĂM HỌC 2026 - 2027<br>MÔN: ${subject.toUpperCase()} (Thời gian: ${time})</p>
+
+              <div>
+                <p><strong>Câu 1:</strong> Biểu thức $\\sqrt{2x - 4}$ xác định với mọi giá trị của $x$ thỏa mãn:</p>
+                <p>A. $x \\ge 2$</p>
+                <p>B. $x > 2$</p>
+                <p>C. $x \\le 2$</p>
+                <p>D. $x < 2$</p>
+              </div>
+
+              <div>
+                <p><strong>Câu 2:</strong> Cho phương trình bậc hai $x^2 - 5x + 6 = 0$. Tổng hai nghiệm $x_1 + x_2$ bằng:</p>
+                <p>A. $-5$</p>
+                <p>B. $5$</p>
+                <p>C. $6$</p>
+                <p>D. $-6$</p>
+              </div>
+
+              <div>
+                <p><strong>Câu 3:</strong> Trong ngôn ngữ Python, hàm nào sau đây dùng để nhập dữ liệu chuỗi từ bàn phím?</p>
+                <p>A. print()</p>
+                <p>B. read()</p>
+                <p>C. input()</p>
+                <p>D. scan()</p>
+              </div>
+
+              <div>
+                <p><strong>Câu 4:</strong> Cho tam giác $ABC$ vuông tại $A$ có $AB = 3\\text{cm}, AC = 4\\text{cm}$. Bán kính đường tròn ngoại tiếp tam giác $ABC$ là:</p>
+                <p>A. $5\\text{cm}$</p>
+                <p>B. $2.5\\text{cm}$</p>
+                <p>C. $3.5\\text{cm}$</p>
+                <p>D. $7\\text{cm}$</p>
+              </div>
+
+              <div class="pt-4 border-t border-slate-200 dark:border-slate-800 font-sans">
+                <p class="font-bold text-emerald-600 dark:text-emerald-400">HƯỚNG DẪN CHẤM &amp; ĐÁP ÁN AZOTA:</p>
+                <div class="grid grid-cols-4 gap-2 font-mono text-center mt-2 text-xs">
+                  <div class="p-1.5 bg-slate-100 dark:bg-slate-800 rounded">1. A</div>
+                  <div class="p-1.5 bg-slate-100 dark:bg-slate-800 rounded">2. B</div>
+                  <div class="p-1.5 bg-slate-100 dark:bg-slate-800 rounded">3. C</div>
+                  <div class="p-1.5 bg-slate-100 dark:bg-slate-800 rounded">4. B</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      outBox.innerHTML = finalHtml;
+      btn.disabled = false;
+      btn.innerHTML = `<i class="fa-solid fa-list-check"></i> <span>Tạo Đề &amp; Ma Trận</span>`;
+      renderMath();
+    }
+
+    // 10. Module 3: BDHSG Python Studio
+    async function generatePythonProblem() {
+      const topic = document.getElementById('py-topic').value;
+      const difficulty = document.getElementById('py-difficulty').value;
+      const timelimit = document.getElementById('py-timelimit').value;
+      const outBox = document.getElementById('py-output');
+      const btn = document.getElementById('btn-gen-py');
+
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang sinh bài toán...</span>`;
+      outBox.innerHTML = `<div class="text-center py-12"><i class="fa-solid fa-circle-notch fa-spin text-3xl text-emerald-500 mb-3"></i><p class="font-bold text-slate-700 dark:text-slate-300">Đang xây dựng đề bài, ràng buộc Subtask và mã nguồn tối ưu...</p></div>`;
+
+      const prompt = `Soạn 1 bài tập lập trình thi Học sinh giỏi Tin học THCS ngôn ngữ Python.
+      Chủ đề: ${topic}. Cấp độ: ${difficulty}. Giới hạn: ${timelimit}.
+      Bao gồm cấu trúc:
+      1. Tên bài & Mã bài (VD: PRIMESUM)
+      2. Đề bài chi tiết
+      3. Ràng buộc (Constraints & Subtasks rõ ràng 60% - 40%)
+      4. Định dạng Dữ liệu vào (Input) & Dữ liệu ra (Output)
+      5. 1 bộ Test case mẫu có giải thích
+      6. Lời giải Python chuẩn tối ưu O(sqrt(N)) hoặc O(N) kèm chú thích sư phạm cho học sinh THCS.`;
+
+      const aiResult = await callGemini(prompt, "Bạn là HLV Đội tuyển Học sinh giỏi Tin học chuyên ra đề thuật toán Python.");
+
+      let finalHtml = "";
+      if (aiResult) {
+        finalHtml = `<div class="space-y-4 whitespace-pre-wrap font-sans text-xs">${aiResult}</div>`;
+      } else {
+        // Smart Olympiad Mock
+        finalHtml = `
+          <div class="space-y-5 font-sans">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+              <div>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-mono">BÀI THI: NUMPRIME</span>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white mt-1">Tổng Thừa Số Nguyên Tố Phân Biệt</h3>
+              </div>
+              <div class="text-right text-xs">
+                <span class="text-slate-400">Giới hạn:</span>
+                <span class="font-bold text-emerald-600 block">${timelimit}</span>
+              </div>
+            </div>
+
+            <div>
+              <h4 class="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-wider text-emerald-600">1. Đề bài:</h4>
+              <p class="text-slate-700 dark:text-slate-300 leading-relaxed mt-1">
+                Cho số nguyên dương $N$. Hãy viết chương trình bằng ngôn ngữ Python để tính tổng tất cả các <strong>thừa số nguyên tố khác nhau</strong> của $N$.
+              </p>
+            </div>
+
+            <div class="p-3 bg-slate-100 dark:bg-slate-800 rounded-xl space-y-1.5 text-xs">
+              <h4 class="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-emerald-600">2. Ràng buộc dữ liệu &amp; Subtasks:</h4>
+              <p>• <strong>Subtask 1 (60% số điểm):</strong> $1 \\le N \\le 10^6$.</p>
+              <p>• <strong>Subtask 2 (40% số điểm):</strong> $10^6 < N \\le 10^{12}$.</p>
+              <p>• Thuật toán yêu cầu đạt độ phức tạp thời gian $O(\\sqrt{N})$ để không bị dính lỗi Time Limit Exceeded (TLE).</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 font-mono text-xs">
+              <div class="p-3 bg-slate-900 text-slate-100 rounded-xl">
+                <span class="text-slate-400 text-[10px] uppercase font-sans block">Input</span>
+                <span class="text-emerald-400 font-bold text-sm">60</span>
+              </div>
+              <div class="p-3 bg-slate-900 text-slate-100 rounded-xl">
+                <span class="text-slate-400 text-[10px] uppercase font-sans block">Output</span>
+                <span class="text-cyan-400 font-bold text-sm">10</span>
+                <span class="text-[10px] text-slate-400 font-sans block mt-0.5">Giải thích: 60 = 2² × 3 × 5 -> 2 + 3 + 5 = 10</span>
+              </div>
+            </div>
+
+            <div>
+              <h4 class="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-wider text-emerald-600 mb-2">3. Mã nguồn giải mẫu tối ưu (Python 3):</h4>
+              <pre class="!bg-slate-900 !text-slate-100 !p-4 !rounded-2xl text-xs font-mono"><code class="language-python"># Thuật toán phân tích thừa số nguyên tố O(sqrt(N))
+# Biên soạn: Thầy Phạm Cảnh - THCS Nguyễn Thị Minh Khai
+
+import sys
+
+def sum_distinct_prime_factors(n: int) -> int:
+    total = 0
+    d = 2
+    # Duyệt đến căn bậc hai của N
+    while d * d <= n:
+        if n % d == 0:
+            total += d
+            # Chia triệt để loại bỏ ước d
+            while n % d == 0:
+                n //= d
+        d += 1
+    # Nếu phần còn lại lớn hơn 1 thì nó chính là số nguyên tố
+    if n > 1:
+        total += n
+    return total
+
+def main():
+    # Nhập xuất tối ưu chống TLE trong kỳ thi HSG
+    input_data = sys.stdin.read().split()
+    if input_data:
+        n = int(input_data[0])
+        print(sum_distinct_prime_factors(n))
+
+if __name__ == '__main__':
+    main()
+</code></pre>
+            </div>
+          </div>
+        `;
+      }
+
+      outBox.innerHTML = finalHtml;
+      btn.disabled = false;
+      btn.innerHTML = `<i class="fa-brands fa-python"></i> <span>Tạo Bài Tập Thuật Toán</span>`;
+      renderMath();
+    }
+
+    // 11. Clipboard Helper
+    function copyContent(elementId) {
+      const text = document.getElementById(elementId).innerText;
+      document.execCommand('copy');
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Đã sao chép toàn bộ nội dung vào bộ nhớ tạm!");
+      }).catch(() => {
+        alert("Đã sao chép!");
+      });
+    }
+
+    // 12. Export to Word (.doc)
+    function exportWord(elementId, filename) {
+      const content = document.getElementById(elementId).innerHTML;
+      const header = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+      <head><meta charset='utf-8'><title>${filename}</title><style>body{font-family: Arial, sans-serif; font-size: 11pt; line-height: 1.4;}</style></head><body>`;
+      const footer = "</body></html>";
+      const sourceHTML = header + content + footer;
+
+      const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+      const fileDownload = document.createElement("a");
+      document.body.appendChild(fileDownload);
+      fileDownload.href = source;
+      fileDownload.download = filename;
+      fileDownload.click();
+      document.body.removeChild(fileDownload);
+    }
+
+    // Initial Math & Code Render
+    window.onload = function() {
+      renderMath();
+    };
+  </script>
+
+</body>
+</html>
